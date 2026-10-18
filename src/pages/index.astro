@@ -1,0 +1,162 @@
+---
+import { getCollection } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import Header from "../components/Header.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+const posts = (await getCollection("blog")).sort((a, b) => {
+  const aDate = a.data.pubDate?.valueOf() ?? 0;
+  const bDate = b.data.pubDate?.valueOf() ?? 0;
+  return bDate - aDate || a.data.title.localeCompare(b.data.title);
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <h1 id="page-title">{SITE_DESCRIPTION}</h1>
+      </section>
+
+      <section class="writing">
+        <div class="section-heading">
+          <span>{posts.length.toString()} posts</span>
+        </div>
+        <ul class="post-list">
+          {
+            posts.map((post) => (
+              <li>
+                <a class="post-link" href={`/blog/${post.id}/`}>
+                  <div class="post-copy">
+                    <h3>{post.data.title}</h3>
+                    <p>{post.data.description}</p>
+                  </div>
+                  <div class="post-meta">
+                    {post.data.pubDate && <FormattedDate date={post.data.pubDate} />}
+                    <span aria-hidden="true" class="arrow">
+                      ↗
+                    </span>
+                  </div>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    width: min(100% - var(--site-gutter), var(--site-width));
+    max-width: var(--site-width);
+    padding-bottom: clamp(4rem, 8vw, 6rem);
+  }
+  .intro {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  .eyebrow {
+    margin-bottom: 1.25rem;
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  h1 {
+    width: 100%;
+    max-width: none;
+    margin-bottom: 1.1rem;
+    font-size: clamp(2.25rem, 4.8vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.065em;
+    line-height: 1.02;
+  }
+  .section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-heading span {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+  .post-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .post-list li {
+    border-bottom: 1px solid var(--line);
+  }
+  .post-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.65rem 0;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      padding 180ms ease,
+      color 180ms ease;
+  }
+  .post-link:hover {
+    padding-right: 0.45rem;
+    padding-left: 0.45rem;
+    color: var(--accent);
+  }
+  .post-copy h3 {
+    margin: 0 0 0.4rem;
+    font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+    letter-spacing: -0.035em;
+  }
+  .post-copy p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .arrow {
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+  .post-link:hover .arrow {
+    transform: translate(2px, -2px);
+  }
+  @media (max-width: 540px) {
+    .post-link {
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .post-meta {
+      gap: 0.4rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .post-link,
+    .arrow {
+      transition: none;
+    }
+  }
+</style>

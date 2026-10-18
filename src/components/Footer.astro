@@ -1,0 +1,23 @@
+---
+import { SITE_TITLE } from '../consts';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+	<p>© {year} {SITE_TITLE}</p>
+</footer>
+
+<style>
+	footer {
+		width: min(100% - var(--site-gutter), var(--site-width));
+		margin: 0 auto;
+		padding: 1.5rem 0 2.5rem;
+		border-top: 1px solid var(--line);
+		color: var(--muted);
+		font-size: 0.8rem;
+	}
+	footer p {
+		margin: 0;
+	}
+</style>

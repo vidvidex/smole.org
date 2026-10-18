@@ -1,0 +1,39 @@
+---
+import { SITE_TITLE } from '../consts';
+---
+
+<header class="site-header">
+	<nav aria-label="Main navigation">
+		<a class="brand" href="/">{SITE_TITLE}</a>
+		<a class="rss-link" href="/rss.xml">RSS <span aria-hidden="true">↗</span></a>
+	</nav>
+</header>
+
+<style>
+	.site-header {
+		border-bottom: 1px solid var(--line);
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: min(100% - var(--site-gutter), var(--site-width));
+		min-height: 76px;
+		margin: 0 auto;
+	}
+	.brand {
+		color: var(--ink);
+		font-size: 1.05rem;
+		font-weight: 700;
+		letter-spacing: -0.04em;
+		text-decoration: none;
+	}
+	.rss-link {
+		color: var(--muted);
+		font-size: 0.8rem;
+		text-decoration: none;
+	}
+	.rss-link:hover {
+		color: var(--accent);
+	}
+</style>
